@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCodeDay1
+{
+    class Program
+    {
+        //Day 1 Puzzle 2
+        //Given the frequency changes in the input, find the first repeated resulting frequency
+        //Console.ReadLine so you can see the answer lazily
+        static void Main(string[] args)
+        {
+            Setup();
+            Console.WriteLine("Done");
+            Console.ReadLine();
+        }
+        static void Setup()
+        {
+            List<string> frequencyChanges = System.IO.File.ReadLines(@"F:\Documents\adventOfCodeDayOneInput.txt").ToList();
+            List<int> resultingFrequencies = new List<int>();
+            FrequencyApplier(frequencyChanges, resultingFrequencies);            
+        }
+
+        static void FrequencyApplier(List<string> frequencyChanges, List<int> resultingFrequencies)
+        {
+            int result = 0;
+            bool doIKeepGoing = true;
+            while (doIKeepGoing == true)
+            {
+                for (int i = 0; i < frequencyChanges.Count; i++)
+                {
+                    int.TryParse(frequencyChanges[i], out int currentFrequency);
+                    result += currentFrequency;
+                    if (!resultingFrequencies.Contains(result))
+                    {
+                        resultingFrequencies.Add(result);
+                    }else
+                    {
+                        Console.WriteLine(result);
+                        doIKeepGoing = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
