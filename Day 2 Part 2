@@ -1,0 +1,77 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCodeDay2Part2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Take in the inputs from a local text file
+            List<string> boxIDs = System.IO.File.ReadLines(@"F:\Documents\day2input.txt").ToList();
+            //Prepare your variables
+            List<char> similarLetters = new List<char>();
+            List<string> finalResults = new List<string>();
+            string currentID;
+            string currentID2;
+            int difference = 26;
+            //A list of Tuple<string,string,int> because we need to store two strings and an int and have them be tied to eachother
+            List<Tuple<string, string, int>> differences = new List<Tuple<string, string, int>>();
+
+            //Iterate through the list, comparing the second and first lines against eachother
+            //This will eventually compare a string against itself, but we account for that later
+            for (int i = 0; i < boxIDs.Count(); i++)
+            {
+                currentID = boxIDs[i];
+                for (int j = 1; j < boxIDs.Count(); j++)
+                {
+                    currentID2 = boxIDs[j];
+                    for (int k = 0; k < currentID.Length; k++)
+                    {
+                        if (currentID[k] == currentID2[k])
+                        {
+                            difference -= 1;
+                            //We start at 26, since every input line is 26 characters long and every time there is a match we go down 1
+                        }
+                    }
+                    //Once we have the difference between the two strings, we store both strings and the difference for later as a Tuple<string,string,int>
+                    Tuple<string, string, int> currentComparison = new Tuple<string, string, int>(currentID, currentID2, difference);
+                    //And we add them to a list for later
+                    differences.Add(currentComparison);
+                    difference = 26; //Reset the difference before we start again
+                }
+            }
+            //Sort the list so the smallest differences are at the top
+            var results = differences.OrderBy(x => x.Item3).ToList();
+
+            //Iterate through the list to shrink it
+            while (results.Count > 1)
+            {
+                if (results[0].Item3 == 0) //If the difference is 0, it was compared against itself so we need to remove it
+                {
+                    results.RemoveAt(0);
+                }
+                else if (results[0].Item3 > results[1].Item3) //Remove the larger differences
+                {
+                    results.RemoveAt(0);
+                }
+                else if (results[0].Item3 < results[1].Item3)
+                {
+                    results.RemoveAt(1);
+                }
+                else if (results[0].Item3 == results[1].Item3) 
+                {
+                    //If they are the same, we know we can add it to the list for later since we found the smallest one
+                    finalResults.Add(results[0].Item1);
+                    results.RemoveAt(0);
+                }
+            }
+            foreach (var result in finalResults)
+            {
+                Console.WriteLine(result); //Write the answer
+            }
+            Console.ReadLine(); //Be able to read the answer
+        }
+    }
+}
