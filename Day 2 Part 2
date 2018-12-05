@@ -64,6 +64,7 @@ namespace AdventOfCodeDay2Part2
                 {
                     //If they are the same, we know we can add it to the list for later since we found the smallest one
                     finalResults.Add(results[0].Item1);
+                    finalResults.Add(results[1].Item1);
                     results.RemoveAt(0);
                 }
             }
